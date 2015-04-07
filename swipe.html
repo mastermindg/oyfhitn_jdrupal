@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oyfhitn Mobile</title>
+  <link rel="stylesheet" href="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  <script>
+		$( document ).on( "pagecreate", function() {
+			$( "body > [data-role='panel']" ).panel();
+			$( "body > [data-role='panel'] [data-role='listview']" ).listview();
+		});
+		$( document ).one( "pageshow", function() {
+			$( "body > [data-role='header']" ).toolbar();
+			$( "body > [data-role='header'] [data-role='navbar']" ).navbar();
+		});
+		$( document ).on( "pageinit", "[data-role='page'].slide", function() {
+			var page = "#" + $( this ).attr( "id" ),
+			// Get the filename of the next page that we stored in the data-next attribute
+			next = $( this ).jqmData( "next" ),
+			// Get the filename of the previous page that we stored in the data-prev attribute
+			prev = $( this ).jqmData( "prev" );
+			// Check if we did set the data-next attribute
+			if ( next ) {
+				// Prefetch the next page
+				$.mobile.loadPage( next + ".html" );
+				// Navigate to next page on swipe left
+				$( document ).on( "swipeleft", page, function() {
+					$.mobile.changePage( next + ".html", { transition: "slide" });
+				});
+				// Navigate to next page when the "next" button is clicked
+				$( ".control .next", page ).on( "click", function() {
+					$.mobile.changePage( next + ".html", { transition: "slide" } );
+				});
+			}
+			// Disable the "next" button if there is no next page
+			else {
+				$( ".control .next", page ).addClass( "ui-disabled" );
+			}
+			// The same for the previous page (we set data-dom-cache="true" so there is no need to prefetch)
+			if ( prev ) {
+				$( document ).on( "swiperight", page, function() {
+					$.mobile.changePage( prev + ".html", { transition: "slide", reverse: true } );
+				});
+				$( ".control .prev", page ).on( "click", function() {
+					$.mobile.changePage( prev + ".html", { transition: "slide", reverse: true } );
+				});
+			}
+			else {
+				$( ".control .prev", page ).addClass( "ui-disabled" );
+			}
+		});
+  </script>
+    <style>
+.center-wrapper{
+  text-align: center;
+}
+.center-wrapper * {
+  margin: 0 auto;
+}
+  </style>
+</head>
+<body>
+
+<!-- External header -->
+<div data-role="header" data-position="fixed" data-theme="a">
+	<h1>Oyfhitn</h1>
+	<a href="#settings" data-icon="bars">Settings</a>
+	<a href="#page-controls" data-icon="grid">Page Controls</a>
+</div>
+<!-- /External header -->
+
+<!-- External panel -->
+<div data-role="panel" id="settings" data-theme="b">
+	<ul data-role="listview">
+		<li data-icon="back"><a href="#" data-rel="close">Close</a></li>
+		<li>External panel</li>
+		<li>Page A</li>
+		<li>Reveal</li>
+	</ul>
+</div>
+<!-- /External panel -->
+
+<!--------------- PAGES ---------------->
+
+<!-- Intro page -->
+<div data-role="page" id="intro-page" class="slide" data-dom-cache="true" data-theme="a" data-next="signup">
+	<div role="main" class="ui-content" id="intro-text">
+		<div class="center-wrapper">
+			<img src="logo.png">
+			<h2>Introduction to Saving Boat-Loads of Money</h2>
+			<hr>
+			<h3>Step 1: Sign up for an account</h3>
+			<h3>Step 2: Customize your settings</h3>
+		</div>
+	</div><!-- /content -->
+
+	<!-- Page Controls Panel - custom to each page -->
+	
+	<div data-role="panel" id="page-controls" data-position="right" data-display="overlay" data-theme="b">
+		<ul data-role="listview">
+			<li data-icon="back"><a href="#" data-rel="close">Close</a></li>
+			<li>Internal panel</li>
+			<li>Page A</li>
+			<li>Overlay</li>
+		</ul>
+	</div>
+
+
+</div>
+<!-- /Intro page -->
+
+<!-- Sign up page -->
+<div data-role="page" id="intro">
+	<div role="main" class="ui-content" id="intro-text">
+		<div class="center-wrapper">
+			<img src="logo.png">
+			<h2>Introduction to Saving Boat-Loads of Money</h2>
+			<hr>
+			<h3>Step 1: Sign up for an account</h3>
+			<h3>Step 2: Customize your settings</h3>
+		</div>
+	</div><!-- /content -->
+
+	<!-- Page Controls Panel - custom to each page -->
+	
+	<div data-role="panel" id="page-controls" data-position="right" data-display="overlay" data-theme="b">
+		<ul data-role="listview">
+			<li data-icon="back"><a href="#" data-rel="close">Close</a></li>
+			<li>Internal panel</li>
+			<li>Page A</li>
+			<li>Overlay</li>
+		</ul>
+	</div>
+
+
+</div>
+<!-- /Intro page -->
+
+</body>
+</html>
