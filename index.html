@@ -1,72 +1,288 @@
-<html> 
-<head> 
-	<title>My Page</title> 
-	<meta name="viewport" content="width=device-width, initial-scale=1"> 
-	<link rel="stylesheet" href="../index.css" >
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
-	<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
-	<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
-	<script id="panel-init">
-		$(function() {
-			$( "#settings" ).panel();
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oyfhitn Mobile</title>
+  <link rel="stylesheet" href="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+  <script>
+		$( document ).on( "pagecreate", function() {
+			$( "body > [data-role='panel']" ).panel();
+			$( "body > [data-role='panel'] [data-role='listview']" ).listview();
 		});
-	</script>
-</head> 
-<body> 
+		$( document ).one( "pageshow", function() {
+			$( "body > [data-role='header']" ).toolbar();
+			$( "body > [data-role='header'] [data-role='navbar']" ).navbar();
+		});
+		var applaunchCount = window.localStorage.getItem('launchCount');
 
-<div data-role="page" id="demo-page" data-theme="d" data-url="demo-page">
-    <div data-role="header" data-theme="c">
-        <h1>Bikes</h1>
-        <a href="#settings" data-icon="bars" data-iconpos="notext" data-shadow="false" data-iconshadow="false">Menu</a>
-    </div><!-- /header -->
-    <div data-role="content">
-        <div class="article">
-            <p>Bike</p>
-            <h2>Fixed Gear</h2>
-            <p>A fixed-gear or fixed-wheel bicycle, commonly known as a fixie, is a bicycle that has a drivetrain with no freewheel mechanism. The freewheel was developed early in the history of bicycle design but the fixed-gear bicycle remained the standard track racing design. More recently the 'fixie' has become a popular alternative among mainly urban cyclists, offering the advantages of simplicity compared with the standard multi-geared bicycle.</p>
-            <p><small>Source: Wikipedia</small></p>
-            <p><a href="#right-panel" data-role="button" data-theme="b" data-inline="true" data-mini="true" data-shadow="false">Share</a></p>
-        </div><!-- /article -->
-    </div><!-- /content -->
+//Check if it already exists or not
+if(applaunchCount){
+   //This is a second time launch, and count = applaunchCount
+}else{
+  //Local storage is not set, hence first time launch. set the local storage item
+  window.localStorage.setItem('launchCount',1);
+
+  //Do the other stuff related to first time launch
+}
+  </script>
+  <script>
+	/*
+	 * Google Maps documentation: http://code.google.com/apis/maps/documentation/javascript/basics.html
+	 * Geolocation documentation: http://dev.w3.org/geo/api/spec-source.html
+	 */
+
+	$( document ).on( "pageinit", "#map-page", function() {
+		var defaultLatLng = new google.maps.LatLng(34.0983425, -118.3267434);  // Default to Hollywood, CA when no geolocation support
+
+		if ( navigator.geolocation ) {
+			function success(pos) {
+				// Location found, show map with these coordinates
+				drawMap(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+			}
+
+			function fail(error) {
+				drawMap(defaultLatLng);  // Failed to find location, show default map
+			}
+
+			// Find the users current position.  Cache the location for 5 minutes, timeout after 6 seconds
+			navigator.geolocation.getCurrentPosition(success, fail, {maximumAge: 500000, enableHighAccuracy:true, timeout: 6000});
+		} else {
+			drawMap(defaultLatLng);  // No geolocation support, show default map
+		}
+
+		function drawMap(latlng) {
+			var myOptions = {
+				zoom: 10,
+				center: latlng,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			};
+
+			var map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+
+			// Add an overlay to the map of current lat/lng
+			var marker = new google.maps.Marker({
+				position: latlng,
+				map: map,
+				title: "Greetings!"
+			});
+		}
+
+	});
+  </script>
+    <style>
+.center-wrapper{
+  text-align: center;
+}
+.center-wrapper * {
+  margin: 0 auto;
+}
+
+.first {
+    float: left;
+    width: 50%;
+    height: 50%;
+}
+
+.second{
+    float: left;
+    width: 50%;
+    height: 50%;
+    background-color: green;
+}
+
+
+.third{
+    float: right;
+    width: 50%;
+    height: 50%;
+}
+
+.fourth {
+    float: right;
+    width: 50%;
+    height: 50%;
+    background-color: #DDDDDD;
+}
+
+html { height: 100% }
+
+body { height: 100%; margin: 0; padding: 0 }
+
+#map-canvas {
+    padding: 0;
+    position : absolute !important; 
+    top : 40px !important;  
+    right : 0; 
+    bottom : 40px !important;  
+    left : 0 !important;     
+}
+
+  </style>
+</head>
+<body>
+
+<!-- External header -->
+<div data-role="header" data-position="fixed" data-theme="a">
+	<h1>Oyfhitn</h1>
+	<a href="#settings" data-icon="bars">Settings</a>
+	<a href="#page-controls" data-icon="grid">Page Controls</a>
 </div>
+<!-- /External header -->
 
-<div data-role="panel" id="settings" data-theme="c">
-        <ul data-role="listview" data-theme="d">
-            <li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
-            <li data-role="list-divider">Menu</li>
-            <li data-icon="back"><a href="#demo-intro" data-rel="back">Demo intro</a></li>
-        </ul>
-        <div data-role="collapsible" data-inset="false" data-iconpos="right" data-theme="d" data-content-theme="d">
-          <h3>Categories</h3>
-          <div data-role="collapsible-set" data-inset="false" data-iconpos="right" data-theme="b" data-content-theme="d">
-            <div data-role="collapsible">
-              <h3>Bikes</h3>
-              <ul data-role="listview">
-                <li><a href="#">Road</a></li>
-                <li><a href="#">ATB</a></li>
-                <li><a href="#">Fixed Gear</a></li>
-                <li><a href="#">Cruiser</a></li>
-              </ul>
-            </div><!-- /collapsible -->
-            <div data-role="collapsible">
-              <h3>Cars</h3>
-              <ul data-role="listview">
-                <li><a href="#">SUV</a></li>
-                <li><a href="#">Sport</a></li>
-                <li><a href="#">Convertible</a></li>
-              </ul>
-            </div><!-- /collapsible -->
-            <div data-role="collapsible">
-              <h3>Boats</h3>
-              <ul data-role="listview">
-                <li><a href="#">Runabout</a></li>
-                <li><a href="#">Motorboat</a></li>
-                <li><a href="#">Sailboat</a></li>
-              </ul>
-            </div><!-- /collapsible -->
-          </div><!-- /collapsible-set -->
-        </div><!-- /collapsible -->
-    </div><!-- /panel -->
+<!-- External panel -->
+<div data-role="panel" id="settings" data-theme="b">
+	<ul data-role="listview">
+		<li>Oyfhitn&nbsp;<img src="logo.png" width=50 height=50></li>
+		<li><a href="index.html">Home</a></li>
+		<li><a href="#info">How to Use</a></li>
+		<li><a href="#map-page">Find Stores</a></li>
+		<li><a href="#favorites">Favorites</a></li>
+	</ul>
+	<ul data-role="listview">
+		<li></li>
+		<li><a href="#account">Account Settings</a></li>
+		<li>Sign Out</li>
+	</ul>
+</div>
+<!-- /External panel -->
+
+<!--------------- PAGES ---------------->
+
+<!-- Intro page -->
+<div data-role="page" id="intro-page">
+	<div role="main" class="ui-content" id="intro-text">
+		<div class="container">
+			<div class="first">
+				<div class="center-wrapper">
+					<a href="#info">
+						<img src="logo.png">
+						<h2>How Oyfhitn Works</h2>
+					</a>
+				</div>
+			</div>
+			<div class="third">
+				<div class="center-wrapper">
+					<img src="user3.png">
+					<h2>Join Oyfhitn</h2>
+				</div>
+			</div>
+		</div>​
+	</div><!-- /content -->
+
+	<!-- Page Controls Panel - custom to each page -->
+	
+	<div data-role="panel" id="page-controls" data-position="right" data-display="overlay" data-theme="b">
+		<ul data-role="listview">
+			<li data-icon="back"><a href="#" data-rel="close">Close</a></li>
+			<li>Internal panel</li>
+			<li>Page A</li>
+			<li>Overlay</li>
+		</ul>
+	</div>
+
+
+</div>
+<!-- /Intro page -->
+
+<!-- Intro page -->
+<div data-role="page" id="info">
+	<div role="main" class="ui-content" id="intro-text">
+		<div class="container">
+			<div class="first">
+				<div class="center-wrapper">
+					<a href="#info">
+						<img src="logo.png">
+						<h2>Starting with Coupons</h2>
+					</a>
+				</div>
+			</div>
+			<div class="third">
+				<div class="center-wrapper">
+					<img src="user3.png">
+					<h2>Join Oyfhitn</h2>
+				</div>
+			</div>
+		</div>​
+	</div><!-- /content -->
+
+	<!-- Page Controls Panel - custom to each page -->
+	
+	<div data-role="panel" id="page-controls" data-position="right" data-display="overlay" data-theme="b">
+		<ul data-role="listview">
+			<li data-icon="back"><a href="#" data-rel="close">Close</a></li>
+			<li>Internal panel</li>
+			<li>Page A</li>
+			<li>Overlay</li>
+		</ul>
+	</div>
+
+
+</div>
+<!-- /Intro page -->
+
+<!-- Sign up page -->
+<div data-role="page" id="signup">
+	<div role="main" class="ui-content" id="intro-text">
+		<div class="center-wrapper">
+			<img src="logo.png">
+			<h2>Introduction to Saving Boat-Loads of Money</h2>
+			<hr>
+			<h3>Step 1: Sign up for an account</h3>
+			<h3>Step 2: Customize your settings</h3>
+		</div>
+	</div><!-- /content -->
+
+	<!-- Page Controls Panel - custom to each page -->
+	
+	<div data-role="panel" id="page-controls" data-position="right" data-display="overlay" data-theme="b">
+		<ul data-role="listview">
+			<li data-icon="back"><a href="#" data-rel="close">Close</a></li>
+			<li>Internal panel</li>
+			<li>Page A</li>
+			<li>Overlay</li>
+		</ul>
+	</div>
+
+
+</div>
+<!-- /Intro page -->
+
+<!-- Map page -->
+<div data-role="page" id="map-page" data-url="map-page">
+    <div role="main" class="content" id="map-canvas">
+		<!-- Map page -->
+    </div>
+    	
+    <!-- Page Controls Panel - custom to each page -->
+	
+	<div data-role="panel" id="page-controls" data-position="right" data-display="overlay" data-theme="b">
+		<ul data-role="listview">
+			<li>List View</li>
+			<li>Favorites</li>
+		</ul>
+	</div>
+</div>
+<!-- /Map page -->
+
+<!-- Favorites page -->
+<div data-role="page" id="map-page" data-url="favorites">
+    <div role="main" class="ui-content">
+        <h1>My Favorites</h1>
+    </div>
+</div>
+<!-- /Favorites page -->
+
+<!-- Account page -->
+<div data-role="page" id="map-page" data-url="account">
+    <div role="main" class="ui-content">
+        <h1>My Account</h1>
+    </div>
+</div>
+<!-- /Account page -->
 
 </body>
 </html>
